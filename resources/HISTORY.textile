@@ -1,0 +1,46 @@
+Written by vor0nwe (Martijn Coppoolse)
+Originally hosted on https://fossil.2of4.net/npp_htmltag
+
+See these related discussion threads in the "npp-plugins" SourceForge project:
+* https://sourceforge.net/forum/message.php?msg_id=4284078
+* https://sourceforge.net/forum/message.php?msg_id=4443898
+
+h2. Releases
+
+bq. Details of current releases can be found in "the change log":https://bitbucket.org/rdipardo/htmltag/src/default/NEWS.textile
+
+* 1.1.0 - 2017-09-04 20:15
+** Added: option to encode line break entities as well "[689eef6cee]":689eef6cee
+** Fixed: decoding a JS escape reduced the selection by one each time "[e717ed1de5]":e717ed1de5
+* 1.0.0 - 2017-02-19 16:03
+** Added: 64-bit version
+** Several tiny bugfixes
+* 0.6.0 - 2015-01-20 21:20
+** Fixed: matching closing tag was excruciatingly slow since the 'new' regular expression engine.
+* 0.5.0 - 2012-06-10 20:22
+** Fixed: crash on close of Notepad++
+* 0.4.0 - 2011-09-03 22:46
+** Added: JS encoding
+* 0.3.2 - 2010-11-07 19:30
+** Fixed: working workaround for change in Scintilla 2.2 with selection not being released
+** Changed: when selecting contents only, don't select whitespace at begin and end of contents
+* 0.3.1 - 2010-11-03 18:00
+** Fixed: workaround for bug in Np++ 5.8.3 with selection not being released
+** Added: busy indicator in Windows 7+ task bar button (can be disabled in Config\HTMLTag.ini)
+* 0.3.0 - 2009-11-29 20:30
+** Added: New plugin command to select tag contents only
+** Changed: Removed unnecessary units, reducing the file size of the DLL by 300KB
+* 0.2.2 - 2008-08-24 21:20
+** Added: Unicode version for Notepad++ 5.1 and up
+* 0.2.1 - 2008-02-22 21:07
+** Fixed: matching in XML files was case-inconsistent
+** Fixed: matching end tag did not take special characters in tag name into account
+* 0.2 - 2007-10-20 20:10
+** Tag detection is now case-sensitive in XML files
+** Added entity encoding/decoding
+** Uploaded the source to the Npp-plugins projects on SF.net
+* 0.1 - 2007-08-05 20:00
+** Initial publication
+
+[689eef6cee]https://fossil.2of4.net/npp_htmltag/info/689eef6cee
+[e717ed1de5]https://fossil.2of4.net/npp_htmltag/info/e717ed1de5
