@@ -1241,87 +1241,27 @@ void toggleEntityAutoCompletion() {
     g.options.entityAutoCompletion = !g.options.entityAutoCompletion; saveOptions(); setMenuChecks();
 }
 
-// ── About panel (programmatic AppKit) ────────────────────────────────────────
-NSWindow *g_aboutWindow = nil;
-
-} // namespace
-
-// Link-button target: opens the URL stored in the button's identifier.
-@interface HTMLTagAboutLinkTarget : NSObject
-+ (instancetype)shared;
-- (void)openLink:(id)sender;
-@end
-@implementation HTMLTagAboutLinkTarget
-+ (instancetype)shared {
-    static HTMLTagAboutLinkTarget *s = nil;
-    static dispatch_once_t once;
-    dispatch_once(&once, ^{ s = [HTMLTagAboutLinkTarget new]; });
-    return s;
-}
-- (void)openLink:(id)sender {
-    NSString *url = [sender identifier];
-    if (url.length)
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
-}
-@end
-
-namespace {
-
-NSTextField *aboutLabel(NSView *parent, NSString *s, NSRect f, bool bold) {
-    NSTextField *t = [NSTextField labelWithString:s];
-    t.frame = f;
-    if (bold) t.font = [NSFont boldSystemFontOfSize:13];
-    [parent addSubview:t];
-    return t;
-}
-
+// ── About (native NSAlert, macOS style) ──────────────────────────────────────
 void cmdAbout() {
     @autoreleasepool {
-        if (g_aboutWindow) { [g_aboutWindow center]; [g_aboutWindow makeKeyAndOrderFront:nil]; return; }
-        const CGFloat W = 460, H = 250;
-        NSWindow *win = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, W, H)
-            styleMask:(NSWindowStyleMaskTitled | NSWindowStyleMaskClosable)
-            backing:NSBackingStoreBuffered defer:NO];
-        win.title = @"About HTML Tag";
-        win.releasedWhenClosed = NO;
-        NSView *v = win.contentView;
-
-        aboutLabel(v, @"HTML Tag plugin for Nextpad++", NSMakeRect(20, H-40, W-40, 22), true);
-        aboutLabel(v, @"Version 1.5.6", NSMakeRect(20, H-62, W-40, 18), false);
-        aboutLabel(v, @"© 2007-2020 Martijn Coppoolse (v0.1 - v1.1)",
-                   NSMakeRect(20, H-92, W-40, 18), false);
-        aboutLabel(v, @"© 2022-2025 Robert Di Pardo (v1.2 -)",
-                   NSMakeRect(20, H-112, W-40, 18), false);
-        aboutLabel(v, @"Licensed under the MPL 2.0", NSMakeRect(20, H-138, W-40, 18), false);
-        aboutLabel(v, @"macOS port: Nextpad++ project", NSMakeRect(20, H-158, W-40, 18), false);
-
-        struct { NSString *title; NSString *url; } links[] = {
-            { @"Release Notes", @"https://github.com/rdipardo/nppHTMLTag/blob/HEAD/NEWS.textile" },
-            { @"Report a Bug",  @"https://github.com/rdipardo/nppHTMLTag/issues" },
-            { @"Project Home",  @"https://github.com/rdipardo/nppHTMLTag" },
-        };
-        CGFloat lx = 20;
-        for (auto &lk : links) {
-            NSButton *b = [NSButton buttonWithTitle:lk.title
-                                             target:[HTMLTagAboutLinkTarget shared]
-                                             action:@selector(openLink:)];
-            NSMutableAttributedString *as = [[NSMutableAttributedString alloc] initWithString:lk.title];
-            NSRange rr = NSMakeRange(0, lk.title.length);
-            [as addAttribute:NSForegroundColorAttributeName value:[NSColor linkColor] range:rr];
-            [as addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:rr];
-            b.attributedTitle = as;
-            b.bordered = NO;
-            [b setButtonType:NSButtonTypeMomentaryChange];
-            b.frame = NSMakeRect(lx, 18, 130, 24);
-            b.toolTip = lk.url;
-            b.identifier = lk.url;
-            [v addSubview:b];
-            lx += 140;
-        }
-
-        [win center];
-        g_aboutWindow = win;
-        [win makeKeyAndOrderFront:nil];
+        NSAlert *a = [[NSAlert alloc] init];
+        a.alertStyle = NSAlertStyleInformational;
+        a.messageText = @"HTML Tag";
+        a.informativeText =
+            @"HTML Tag for Notepad++ (macOS port)\n"
+            @"Version 1.0.0\n\n"
+            @"HTML and XML tag matching, selection, and entity encoding.\n\n"
+            @"Features:\n"
+            @"- Jump to the matching open/close tag\n"
+            @"- Select tag contents or the whole tag\n"
+            @"- Encode and decode HTML entities and Unicode escapes\n"
+            @"- Live entity decode and entity-name autocompletion\n"
+            @"- Toolbar button\n\n"
+            @"Original Windows plugin by Martijn Coppoolse (vor0nwe) and Robert Di Pardo (MPL 2.0)\n"
+            @"macOS port by Andrey Letov\n"
+            @"Project home: https://github.com/nextpad-plus-plus-plugins/HTMLTag.macos";
+        [a addButtonWithTitle:@"OK"];
+        [a runModal];
     }
 }
 
